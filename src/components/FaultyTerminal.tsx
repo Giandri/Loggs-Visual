@@ -266,6 +266,38 @@ export default function FaultyTerminal({
   style,
   ...rest
 }: FaultyTerminalProps) {
+  // Optimize for mobile devices
+  const isMobile = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           window.innerWidth < 768;
+  }, []);
+
+  // Mobile-optimized parameters
+  const optimizedParams = useMemo(() => {
+    if (isMobile) {
+      return {
+        dpr: Math.min(dpr, 1), // Reduce DPR for mobile
+        gridMul: [Math.max(gridMul[0] * 0.7, 1), Math.max(gridMul[1] * 0.7, 0.5)], // Reduce grid complexity
+        noiseAmp: noiseAmp * 0.6, // Reduce noise
+        chromaticAberration: chromaticAberration * 0.3, // Reduce chromatic aberration
+        dither: typeof dither === 'number' ? dither * 0.5 : dither, // Reduce dither
+        mouseStrength: mouseStrength * 0.5, // Reduce mouse interaction
+        mouseReact: false, // Disable mouse reaction on mobile for better performance
+        curvature: curvature * 0.8, // Slightly reduce curvature
+      };
+    }
+    return {
+      dpr,
+      gridMul,
+      noiseAmp,
+      chromaticAberration,
+      dither,
+      mouseStrength,
+      mouseReact,
+      curvature,
+    };
+  }, [isMobile, dpr, gridMul, noiseAmp, chromaticAberration, dither, mouseStrength, mouseReact, curvature]);
   const containerRef = useRef<HTMLDivElement>(null);
   const programRef = useRef<Program>(null);
   const rendererRef = useRef<Renderer>(null);
@@ -293,7 +325,7 @@ export default function FaultyTerminal({
     const ctn = containerRef.current;
     if (!ctn) return;
 
-    const renderer = new Renderer({ dpr });
+    const renderer = new Renderer({ dpr: optimizedParams.dpr });
     rendererRef.current = renderer;
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 1);
@@ -310,21 +342,21 @@ export default function FaultyTerminal({
         },
         uScale: { value: scale },
 
-        uGridMul: { value: new Float32Array(gridMul) },
+        uGridMul: { value: new Float32Array(optimizedParams.gridMul) },
         uDigitSize: { value: digitSize },
         uScanlineIntensity: { value: scanlineIntensity },
         uGlitchAmount: { value: glitchAmount },
         uFlickerAmount: { value: flickerAmount },
-        uNoiseAmp: { value: noiseAmp },
-        uChromaticAberration: { value: chromaticAberration },
-        uDither: { value: ditherValue },
-        uCurvature: { value: curvature },
+        uNoiseAmp: { value: optimizedParams.noiseAmp },
+        uChromaticAberration: { value: optimizedParams.chromaticAberration },
+        uDither: { value: typeof optimizedParams.dither === 'number' ? optimizedParams.dither : (optimizedParams.dither ? 1 : 0) },
+        uCurvature: { value: optimizedParams.curvature },
         uTint: { value: new Color(tintVec[0], tintVec[1], tintVec[2]) },
         uMouse: {
           value: new Float32Array([smoothMouseRef.current.x, smoothMouseRef.current.y]),
         },
-        uMouseStrength: { value: mouseStrength },
-        uUseMouse: { value: mouseReact ? 1 : 0 },
+        uMouseStrength: { value: optimizedParams.mouseStrength },
+        uUseMouse: { value: optimizedParams.mouseReact ? 1 : 0 },
         uPageLoadProgress: { value: pageLoadAnimation ? 0 : 1 },
         uUsePageLoadAnimation: { value: pageLoadAnimation ? 1 : 0 },
         uBrightness: { value: brightness },
@@ -395,22 +427,15 @@ export default function FaultyTerminal({
       timeOffsetRef.current = Math.random() * 100;
     };
   }, [
-    dpr,
+    optimizedParams,
     pause,
     timeScale,
     scale,
-    gridMul,
     digitSize,
     scanlineIntensity,
     glitchAmount,
     flickerAmount,
-    noiseAmp,
-    chromaticAberration,
-    ditherValue,
-    curvature,
     tintVec,
-    mouseReact,
-    mouseStrength,
     pageLoadAnimation,
     brightness,
     handleMouseMove,

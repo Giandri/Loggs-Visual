@@ -10,6 +10,7 @@ import { Footer } from "@/components/Footer";
 import MotionLayer from "@/components/MotionLayer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import WorkModal from "@/components/WorkModal";
+import OptimizedImage from "@/components/OptimizedImage";
 import { worksItems, WorkItem } from "@/config/works";
 
 export default function Home() {
@@ -86,7 +87,7 @@ export default function Home() {
                 <div className="flex flex-col h-full transition-transform group-hover:scale-[0.98]">
                   {/* Image */}
                   <div className="flex-1 mb-4 overflow-hidden rounded-lg relative">
-                    <img src={work.imageUrl} alt={work.title} className="w-full h-full object-cover transition-transform group-hover:scale-105" loading="lazy" />
+                    <OptimizedImage src={work.imageUrl} alt={work.title} className="w-full h-full object-cover transition-transform group-hover:scale-105" priority={index < 2} />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium">Click to view</div>

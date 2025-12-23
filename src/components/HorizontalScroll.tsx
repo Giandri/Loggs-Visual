@@ -4,6 +4,7 @@ import { motion, MotionProps, useMotionValueEvent, useScroll, useTransform } fro
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import OptimizedImage from "./OptimizedImage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -116,7 +117,12 @@ export default function HorizontalScroll() {
           <motion.div ref={carouselRef} className="flex gap-10" style={{ x }}>
             {galleryImages.map((item, index) => (
               <motion.div {...slideAnimation} key={item.id} className="group relative h-[300px] w-[300px] overflow-hidden rounded-sm bg-black shrink-0">
-                <motion.img key={item.id} className="w-full h-full object-cover" src={item?.url} alt={"img"} />
+                <OptimizedImage
+                  src={item.url}
+                  alt={item.title || `Gallery image ${item.id}`}
+                  className="w-full h-full"
+                  priority={index < 3} // Prioritize loading first 3 images
+                />
               </motion.div>
             ))}
           </motion.div>

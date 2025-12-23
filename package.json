@@ -12,6 +12,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "gsap": "^3.14.2",
+    "ldrs": "^1.1.9",
     "lenis": "^1.3.16",
     "lucide-react": "^0.562.0",
     "motion": "^12.23.26",

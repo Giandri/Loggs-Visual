@@ -80,7 +80,7 @@ const Navbar = () => {
             }}
             transition={{ duration: 0.3 }}
             className="shrink-0">
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center cursor-target">
               <img src="/logo.png" alt="Loggs Visual Logo" className="h-8 sm:h-10 w-auto" style={{ filter: "brightness(0) invert(1)" }} />
             </Link>
           </motion.div>

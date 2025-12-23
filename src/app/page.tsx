@@ -41,8 +41,8 @@ export default function Home() {
         {/* Container 1 - Hero */}
         <div className="relative z-10 pt-16 min-h-screen">
           <div className="absolute left-0 bottom-0 z-20 flex flex-col justify-end h-full w-full pl-8 pb-16 pointer-events-none select-none">
-            <span className="text-[8vw] md:text-[9vw] xl:text-[8vw] leading-[0.9] tracking-tight font-black uppercase text-white drop-shadow-xl flex">
-              Local <span className=" left-[-20] text-[3vw] md:text-[2.2vw] lg:text-[24px] leading-snug font-black uppercase text-white pl-[1vw] mb-1 ">Visual</span>
+            <span className="text-[18vw] md:text-[9vw] xl:text-[8vw] leading-[0.9] tracking-tight font-black uppercase text-white drop-shadow-xl flex">
+              Local <span className="text-[4vw] md:text-[2.2vw] lg:text-[24px] leading-snug font-black uppercase text-white pl-[1vw] mb-1 ">Visual</span>
             </span>
 
             <span className="block text-[8vw] md:text-[9vw] xl:text-[8vw] leading-[0.9] tracking-tight font-black uppercase text-white drop-shadow-xl">Gigs</span>
@@ -62,31 +62,31 @@ export default function Home() {
         </div>
 
         {/* Container 3 - Stats */}
-        <div className="relative z-10 bg-[#f5f5f5] backdrop-blur-sm min-h-screen ">
+        <div className="relative z-10 bg-[#f5f5f5] backdrop-blur-sm min-h-[70vh] md:min-h-screen">
           {/* Sticky client text */}
-          <div className="sticky top-10 left-0 z-20 mb-40 pt-8 pl-8 pointer-events-none select-none">
-            <span className="text-sm md:text-xl font-mono text-black/60 drop-shadow-lg">[Our Client]</span>
+          <div className="sticky top-6 md:top-10 left-0 z-20 mb-20 md:mb-40 pt-4 md:pt-8 pl-4 md:pl-8 pointer-events-none select-none">
+            <span className="text-xs md:text-sm xl:text-xl font-mono text-black/60 drop-shadow-lg">[Our Client]</span>
           </div>
 
           {/* Middle thematic text */}
-          <div className="mb-8 text-center flex flex-col items-center justify-center">
-            <h2 className="text-2xl md:text-6xl font-serif text-black mb-2">Make Your Band a Portfolio</h2>
-            <p className="text-sm font-mono text-black/80 max-w-2xl">We capture the energy, the crowd, and the soul of your performance.</p>
+          <div className="mb-4 md:mb-8 text-center flex flex-col items-center justify-center px-4 pt-8 md:pt-12">
+            <h2 className="text-xl md:text-4xl lg:text-6xl font-serif text-black mb-2 leading-tight">Make Your Band a Portfolio</h2>
+            <p className="text-sm font-mono text-black/80 max-w-2xl px-2">We capture the energy, the crowd, and the soul of your performance.</p>
           </div>
 
           {/* Stats */}
-          <div className="flex items-center justify-center gap-20">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 md:gap-20 px-4 pb-8 md:pb-12">
             <div className="flex font-mono flex-col items-center">
-              <AnimatedNumber end={20} showPlus={true} className="text-6xl font-bold text-black cursor-target" />
-              <h3 className="text-sm text-black font-medium mt-2">Events</h3>
+              <AnimatedNumber end={20} showPlus={true} className="text-4xl md:text-6xl font-bold text-black cursor-target" />
+              <h3 className="text-xs md:text-sm text-black font-medium mt-1 md:mt-2">Events</h3>
             </div>
             <div className="flex font-mono flex-col items-center">
-              <AnimatedNumber end={10} showPlus={true} className="text-6xl font-bold text-black cursor-target" />
-              <h3 className="text-sm text-black font-medium mt-2">Bands</h3>
+              <AnimatedNumber end={10} showPlus={true} className="text-4xl md:text-6xl font-bold text-black cursor-target" />
+              <h3 className="text-xs md:text-sm text-black font-medium mt-1 md:mt-2">Bands</h3>
             </div>
             <div className="flex font-mono flex-col items-center">
-              <AnimatedNumber end={1000} className="text-6xl font-bold text-black cursor-target" />
-              <h3 className="text-sm text-black font-medium mt-2">Photos</h3>
+              <AnimatedNumber end={1000} className="text-4xl md:text-6xl font-bold text-black cursor-target" />
+              <h3 className="text-xs md:text-sm text-black font-medium mt-1 md:mt-2">Photos</h3>
             </div>
           </div>
         </div>

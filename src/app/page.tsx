@@ -1,65 +1,99 @@
-import Image from "next/image";
+"use client";
+
+import Navbar from "@/components/Navbar";
+import FaultyTerminal from "@/components/FaultyTerminal";
+import TargetCursor from "@/components/TargetCursor";
+import HorizontalScroll from "@/components/HorizontalScroll";
+import AnimatedNumber from "@/components/AnimatedNumber";
+import { Footer } from "@/components/Footer";
+import { SmoothScroll } from "@/components/SmoothScroll";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <>
+      <SmoothScroll>
+        <TargetCursor spinDuration={2} hideDefaultCursor={true} parallaxOn={true} />
+        <Navbar />
+        <div className="fixed inset-0 z-0" style={{ pointerEvents: "none" }}>
+          <div style={{ pointerEvents: "auto", width: "100%", height: "100%" }}>
+            <FaultyTerminal
+              scale={2}
+              gridMul={[2, 1]}
+              digitSize={1.2}
+              timeScale={1}
+              pause={false}
+              scanlineIntensity={1}
+              glitchAmount={1}
+              flickerAmount={1}
+              noiseAmp={1}
+              chromaticAberration={0}
+              dither={0}
+              curvature={0.1}
+              tint="#f5f5f5"
+              mouseReact={true}
+              mouseStrength={1.0}
+              pageLoadAnimation={false}
+              brightness={1}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
         </div>
-      </main>
-    </div>
+
+        {/* Container 1 - Hero */}
+        <div className="relative z-10 pt-16 min-h-screen">
+          <div className="absolute left-0 bottom-0 z-20 flex flex-col justify-end h-full w-full pl-8 pb-16 pointer-events-none select-none">
+            <span className="text-[8vw] md:text-[9vw] xl:text-[8vw] leading-[0.9] tracking-tight font-black uppercase text-white drop-shadow-xl flex">
+              Local <span className=" left-[-20] text-[3vw] md:text-[2.2vw] lg:text-[24px] leading-snug font-black uppercase text-white pl-[1vw] mb-1 ">Visual</span>
+            </span>
+
+            <span className="block text-[8vw] md:text-[9vw] xl:text-[8vw] leading-[0.9] tracking-tight font-black uppercase text-white drop-shadow-xl">Gigs</span>
+          </div>
+          <div className="absolute right-0 bottom-0 z-20 pr-8 pb-16 pointer-events-none select-none">
+            <span className="text-sm md:text-xl  font-mono text-white drop-shadow-lg">[.jpg/.mp4]</span>
+          </div>
+        </div>
+
+        {/* Container 2 - Highlight*/}
+        <div className="relative z-10 bg-black backdrop-blur-sm min-h-screen">
+          {/* Sticky highlight text */}
+          <div className="sticky top-10 mb-10 left-0 z-20 pt-8 pl-8 pointer-events-none select-none">
+            <span className="text-sm md:text-xl font-mono text-white/70 drop-shadow-lg">[Highlight]</span>
+          </div>
+          <HorizontalScroll />
+        </div>
+
+        {/* Container 3 - Stats */}
+        <div className="relative z-10 bg-[#f5f5f5] backdrop-blur-sm min-h-screen ">
+          {/* Sticky client text */}
+          <div className="sticky top-10 left-0 z-20 mb-40 pt-8 pl-8 pointer-events-none select-none">
+            <span className="text-sm md:text-xl font-mono text-black/60 drop-shadow-lg">[Our Client]</span>
+          </div>
+
+          {/* Middle thematic text */}
+          <div className="mb-8 text-center flex flex-col items-center justify-center">
+            <h2 className="text-2xl md:text-6xl font-serif text-black mb-2">Make Your Band a Portfolio</h2>
+            <p className="text-sm font-mono text-black/80 max-w-2xl">We capture the energy, the crowd, and the soul of your performance.</p>
+          </div>
+
+          {/* Stats */}
+          <div className="flex items-center justify-center gap-20">
+            <div className="flex font-mono flex-col items-center">
+              <AnimatedNumber end={20} showPlus={true} className="text-6xl font-bold text-black cursor-target" />
+              <h3 className="text-sm text-black font-medium mt-2">Events</h3>
+            </div>
+            <div className="flex font-mono flex-col items-center">
+              <AnimatedNumber end={10} showPlus={true} className="text-6xl font-bold text-black cursor-target" />
+              <h3 className="text-sm text-black font-medium mt-2">Bands</h3>
+            </div>
+            <div className="flex font-mono flex-col items-center">
+              <AnimatedNumber end={1000} className="text-6xl font-bold text-black cursor-target" />
+              <h3 className="text-sm text-black font-medium mt-2">Photos</h3>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <Footer />
+      </SmoothScroll>
+    </>
   );
 }

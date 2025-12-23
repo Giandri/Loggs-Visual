@@ -79,12 +79,9 @@ const Navbar = () => {
               scale: isScrolled ? 0.9 : 1,
             }}
             transition={{ duration: 0.3 }}
-            className="flex-shrink-0">
-            <Link href="/" className="text-white font-bold flex flex-col">
-              <h1 className="text-xs sm:text-base leading-none">Loggs</h1>
-              <h1 className="top-[-10px] flex gap-0.5 text-xs sm:text-base leading-none">
-                Visual <span className="text-black font-bold">.</span>
-              </h1>
+            className="shrink-0">
+            <Link href="/" className="flex items-center">
+              <img src="/logo.png" alt="Loggs Visual Logo" className="h-8 sm:h-10 w-auto" style={{ filter: "brightness(0) invert(1)" }} />
             </Link>
           </motion.div>
 

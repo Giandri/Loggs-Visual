@@ -1,7 +1,7 @@
 "use client";
 
 import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
-import React, { useEffect, useRef, useMemo, useCallback } from "react";
+import React, { useEffect, useRef, useMemo, useCallback, useState } from "react";
 
 type Vec2 = [number, number];
 
@@ -266,31 +266,49 @@ export default function FaultyTerminal({
   style,
   ...rest
 }: FaultyTerminalProps) {
-  // Responsive parameters based on screen size
-  const responsiveParams = useMemo(() => {
-    if (typeof window === 'undefined') return { dpr, scale };
+  // Balanced mobile optimization - keep WebGL but heavily optimize
+  const isMobile = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+  }, []);
 
-    const width = window.innerWidth;
+  // Mobile-optimized parameters with reduced effects but keep visual appeal
+  const mobileParams = useMemo(() => {
+    if (!isMobile) return null;
 
-    // Mobile optimizations
-    if (width < 768) {
-      return {
-        dpr: Math.min(dpr, 1.5), // Reduce DPR for mobile but keep some quality
-        scale: Math.max(scale * 0.8, 0.5), // Slightly reduce scale for mobile
-      };
-    }
+    return {
+      dpr: 1, // Force DPR to 1 for mobile
+      scale: Math.max(scale * 0.4, 0.2), // Significantly reduce scale but keep visible
+      scanlineIntensity: scanlineIntensity * 0.3, // Reduce scanlines a lot
+      glitchAmount: Math.max(glitchAmount * 0.5, 0.2), // Reduce glitch effects
+      flickerAmount: flickerAmount * 0.6, // Reduce flicker
+      noiseAmp: noiseAmp * 0.3, // Significantly reduce noise
+      chromaticAberration: 0, // Disable chromatic aberration on mobile
+      dither: 0, // Disable dither on mobile
+      curvature: curvature * 0.3, // Reduce curvature significantly
+      mouseReact: false, // Disable mouse interaction
+      mouseStrength: 0, // No mouse strength
+      brightness: brightness * 0.95, // Slightly dimmer
+      timeScale: timeScale * 0.5, // Slower animation for battery saving
+    };
+  }, [isMobile, scale, scanlineIntensity, glitchAmount, flickerAmount, noiseAmp, chromaticAberration, dither, curvature, mouseReact, mouseStrength, brightness, timeScale]);
 
-    // Tablet optimizations
-    if (width < 1024) {
-      return {
-        dpr: Math.min(dpr, 1.8),
-        scale: Math.max(scale * 0.9, 0.7),
-      };
-    }
-
-    // Desktop - full quality
-    return { dpr, scale };
-  }, [dpr, scale]);
+  // Use mobile params if on mobile, otherwise use original params
+  const finalParams = mobileParams || {
+    dpr,
+    scale,
+    scanlineIntensity,
+    glitchAmount,
+    flickerAmount,
+    noiseAmp,
+    chromaticAberration,
+    dither,
+    curvature,
+    mouseReact,
+    mouseStrength,
+    brightness,
+    timeScale,
+  };
   const containerRef = useRef<HTMLDivElement>(null);
   const programRef = useRef<Program>(null);
   const rendererRef = useRef<Renderer>(null);
@@ -318,7 +336,7 @@ export default function FaultyTerminal({
     const ctn = containerRef.current;
     if (!ctn) return;
 
-    const renderer = new Renderer({ dpr: responsiveParams.dpr });
+    const renderer = new Renderer({ dpr: finalParams.dpr });
     rendererRef.current = renderer;
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 1);
@@ -333,26 +351,26 @@ export default function FaultyTerminal({
         iResolution: {
           value: new Color(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height),
         },
-        uScale: { value: responsiveParams.scale },
+        uScale: { value: finalParams.scale },
 
         uGridMul: { value: new Float32Array(gridMul) },
         uDigitSize: { value: digitSize },
-        uScanlineIntensity: { value: scanlineIntensity },
-        uGlitchAmount: { value: glitchAmount },
-        uFlickerAmount: { value: flickerAmount },
-        uNoiseAmp: { value: noiseAmp },
-        uChromaticAberration: { value: chromaticAberration },
-        uDither: { value: ditherValue },
-        uCurvature: { value: curvature },
+        uScanlineIntensity: { value: finalParams.scanlineIntensity },
+        uGlitchAmount: { value: finalParams.glitchAmount },
+        uFlickerAmount: { value: finalParams.flickerAmount },
+        uNoiseAmp: { value: finalParams.noiseAmp },
+        uChromaticAberration: { value: finalParams.chromaticAberration },
+        uDither: { value: typeof finalParams.dither === "number" ? finalParams.dither : finalParams.dither ? 1 : 0 },
+        uCurvature: { value: finalParams.curvature },
         uTint: { value: new Color(tintVec[0], tintVec[1], tintVec[2]) },
         uMouse: {
           value: new Float32Array([smoothMouseRef.current.x, smoothMouseRef.current.y]),
         },
-        uMouseStrength: { value: mouseStrength },
-        uUseMouse: { value: mouseReact ? 1 : 0 },
+        uMouseStrength: { value: finalParams.mouseStrength },
+        uUseMouse: { value: finalParams.mouseReact ? 1 : 0 },
         uPageLoadProgress: { value: pageLoadAnimation ? 0 : 1 },
         uUsePageLoadAnimation: { value: pageLoadAnimation ? 1 : 0 },
-        uBrightness: { value: brightness },
+        uBrightness: { value: finalParams.brightness },
       },
     });
     programRef.current = program;
@@ -377,7 +395,7 @@ export default function FaultyTerminal({
       }
 
       if (!pause) {
-        const elapsed = (t * 0.001 + timeOffsetRef.current) * timeScale;
+        const elapsed = (t * 0.001 + timeOffsetRef.current) * finalParams.timeScale;
         program.uniforms.iTime.value = elapsed;
         frozenTimeRef.current = elapsed;
       } else {
@@ -419,26 +437,7 @@ export default function FaultyTerminal({
       loadAnimationStartRef.current = 0;
       timeOffsetRef.current = Math.random() * 100;
     };
-  }, [
-    responsiveParams,
-    pause,
-    timeScale,
-    gridMul,
-    digitSize,
-    scanlineIntensity,
-    glitchAmount,
-    flickerAmount,
-    noiseAmp,
-    chromaticAberration,
-    ditherValue,
-    curvature,
-    tintVec,
-    mouseReact,
-    mouseStrength,
-    pageLoadAnimation,
-    brightness,
-    handleMouseMove,
-  ]);
+  }, [finalParams, pause, gridMul, digitSize, tintVec, pageLoadAnimation, handleMouseMove]);
 
   return <div ref={containerRef} className={`w-full h-full relative overflow-hidden ${className}`} style={style} {...rest} />;
 }

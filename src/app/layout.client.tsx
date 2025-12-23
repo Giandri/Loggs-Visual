@@ -1,7 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import PageLoader from "@/components/PageLoader";
+import { useState, useEffect, Suspense } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import PageLoader with SSR disabled to avoid HTMLElement error
+const PageLoader = dynamic(() => import("@/components/PageLoader"), {
+  ssr: false,
+  loading: () => null, // Don't show anything while loading
+});
 
 export default function ClientLayout({
   children,
@@ -21,7 +27,9 @@ export default function ClientLayout({
 
   return (
     <>
-      <PageLoader isLoading={isLoading} />
+      <Suspense fallback={null}>
+        <PageLoader isLoading={isLoading} />
+      </Suspense>
       {children}
     </>
   );

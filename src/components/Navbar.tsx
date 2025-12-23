@@ -10,7 +10,74 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [currentTime, setCurrentTime] = useState("");
+  const [isMobileView, setIsMobileView] = useState(false);
+  const [isBlinking, setIsBlinking] = useState(false);
   const { scrollY } = useScroll();
+
+  // Check screen size for mobile view
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobileView(window.innerWidth < 768); // md breakpoint
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  // Detect loading state and blinking animation
+  useEffect(() => {
+    // Start blinking during loading (first 2 seconds)
+    setIsBlinking(true);
+
+    const timer = setTimeout(() => {
+      setIsBlinking(false);
+    }, 2000); // Match loader duration
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Update clock every second
+  useEffect(() => {
+    const updateTime = () => {
+      if (isBlinking) {
+        // During loading: HH:mm format only (no seconds)
+        setCurrentTime(
+          new Date().toLocaleTimeString("en-US", {
+            hour12: true,
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        );
+      } else if (isMobileView) {
+        // Mobile: HH:mm AM/PM
+        setCurrentTime(
+          new Date().toLocaleTimeString("en-US", {
+            hour12: true,
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        );
+      } else {
+        // Desktop: Always show full HH:mm:ss AM/PM format for consistent width
+        setCurrentTime(
+          new Date().toLocaleTimeString("en-US", {
+            hour12: true,
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          })
+        );
+      }
+    };
+
+    updateTime(); // Initial call
+    const interval = setInterval(updateTime, 1000);
+
+    return () => clearInterval(interval);
+  }, [isMobileView, isBlinking]);
 
   // Detect scroll position and direction
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -72,7 +139,7 @@ const Navbar = () => {
           marginLeft: isScrolled ? "30%" : "0.5rem",
           marginRight: isScrolled ? "30%" : "0.5rem",
         }}>
-        <div className="flex items-center justify-between h-14 sm:h-16">
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4 h-14 sm:h-16">
           {/* Logo */}
           <motion.div
             animate={{
@@ -85,14 +152,28 @@ const Navbar = () => {
             </Link>
           </motion.div>
 
+          {/* Center Clock */}
+          <div className="flex justify-center">
+            <motion.div
+              animate={isBlinking ? { opacity: [1, 0, 1] } : { opacity: 1 }}
+              transition={{
+                duration: isBlinking ? 0.8 : 0.3,
+                repeat: isBlinking ? Infinity : 0,
+                ease: "easeInOut",
+              }}
+              className="text-white font-mono text-xs md:text-sm font-medium tracking-wider text-center">
+              {currentTime}
+            </motion.div>
+          </div>
+
           {/* Desktop Navigation */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:flex justify-end">
             <motion.div
               animate={{
                 gap: isScrolled ? "4px" : "16px",
               }}
               transition={{ duration: 0.3 }}
-              className="ml-10 flex items-center space-x-4">
+              className="flex items-center space-x-4">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link href="/" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium transition-colors duration-200 cursor-target">
                   Home

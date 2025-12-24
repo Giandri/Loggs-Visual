@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -82,8 +83,24 @@ export default function AnimatedTimeline({ experiences }: AnimatedTimelineProps)
 
       {/* Header */}
       <div className="max-w-4xl mx-auto text-center mb-20">
-        <h2 className="text-5xl md:text-7xl font-serif text-black mb-6">Journey</h2>
-        <p className="text-xl font-mono text-black/80">The Story Behind Loggs Visual.</p>
+        <motion.h2
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 1.0, ease: "easeOut" }}
+          className="text-5xl md:text-7xl font-serif text-black mb-6"
+        >
+          Journey
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          className="text-xl font-mono text-black/80"
+        >
+          The Story Behind Loggs Visual.
+        </motion.p>
       </div>
 
       {/* Timeline Container */}

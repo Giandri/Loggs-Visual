@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import TargetCursor from "@/components/TargetCursor";
 import { Footer } from "@/components/Footer";
 import AnimatedTimeline from "@/components/Timeline";
+import { motion } from "framer-motion";
 
 export default function About() {
   const experiences = [
@@ -39,8 +40,24 @@ export default function About() {
                   <figure className="relative left-1/2 w-screen -translate-x-1/2 m-0 mb-4">
                     <img src="/gallery/999.JPG" alt="Hero" className="w-full object-cover min-h-screen" />
                   </figure>
-                  <h1 className="font-serif leading-none  text-[5.2rem]">Who We Are.</h1>
-                  <p className="text-[18px] font-mono leading-[1.45] top-2 mb-4">A documentation project born from passion, capturing bands with honest visuals and raw energy. Based in Pangkal Pinang.</p>
+                  <motion.h1
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 1.0, ease: "easeOut" }}
+                    className="font-serif leading-none text-[5.2rem]"
+                  >
+                    Who We Are.
+                  </motion.h1>
+                  <motion.p
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                    className="text-[18px] font-mono leading-[1.45] top-2 mb-4"
+                  >
+                    A documentation project born from passion, capturing bands with honest visuals and raw energy. Based in Pangkal Pinang.
+                  </motion.p>
                 </div>
               </section>
             </main>

@@ -19,10 +19,9 @@ export function throttle(fn: (...args: any[]) => any, wait: number) {
     }
   };
 }
-// Import gallery images from config
+
 import { galleryImages } from "@/config/gallery";
 
-// * based on: https://gist.github.com/coleturner/34396fb826c12fbd88d6591173d178c2
 function useElementViewportPosition(ref: React.RefObject<HTMLElement | null>) {
   const [position, setPosition] = useState<[number, number]>([0, 0]);
 
@@ -52,11 +51,20 @@ const slideAnimation: MotionProps = {
 export default function HorizontalScroll() {
   const mainRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
+  const svgPathRef = useRef<SVGPathElement>(null);
+  const dotRef = useRef<SVGCircleElement>(null);
   const { position } = useElementViewportPosition(mainRef);
   const [carouselEndPosition, setCarouselEndPosition] = useState(0);
   const { scrollYProgress, scrollY } = useScroll();
-  const x = useTransform(scrollYProgress, position, [0, carouselEndPosition]);
+
+  // Blur effect
+  const blurValue = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [2, 0.5, 0, 0.5, 2], { clamp: true });
+
+  const filterValue = useTransform(blurValue, (blurValue) => {
+    return blurValue <= 0 ? "none" : `blur(${blurValue}px)`;
+  });
+
+  const x = useTransform(scrollYProgress, [0, 1], [0, carouselEndPosition]);
 
   useEffect(() => {
     if (!carouselRef || !carouselRef.current) return;
@@ -78,51 +86,127 @@ export default function HorizontalScroll() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Animate horizontal line
+  // ============================================
+  // PILIHAN 3: Elastic Spring Path
+  // ============================================
+  const generateElasticPath = () => {
+    const width = 3000;
+    const height = 90;
+    const points = 200;
+
+    let path = `M 0 ${height / 2}`;
+
+    for (let i = 1; i <= points; i++) {
+      const x = (i / points) * width;
+      const t = i / points;
+
+      // Elastic easing formula
+      const amplitude = 50 * Math.exp(-5 * t);
+      const y = height / 2 + amplitude * Math.sin(20 * t * Math.PI);
+
+      path += ` L ${x} ${y}`;
+    }
+
+    return path;
+  };
+
+  // Animate SVG path dengan GSAP
   useEffect(() => {
-    if (!lineRef.current || !mainRef.current) return;
+    if (!svgPathRef.current || !mainRef.current) return;
+
+    const path = svgPathRef.current;
+    const pathLength = path.getTotalLength();
+
+    path.style.strokeDasharray = `${pathLength}`;
+    path.style.strokeDashoffset = `${pathLength}`;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        lineRef.current,
-        {
-          width: 0,
+      // Animate path drawing
+      gsap.to(path, {
+        strokeDashoffset: 0,
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: mainRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.5,
         },
-        {
-          width: "100%",
-          duration: 2,
+      });
+
+      // Animate dot following the path
+      if (dotRef.current) {
+        gsap.to(dotRef.current, {
+          motionPath: {
+            path: path,
+            align: path,
+            alignOrigin: [0.5, 0.5],
+          },
           ease: "power2.inOut",
           scrollTrigger: {
             trigger: mainRef.current,
-            start: "top center",
-            end: "bottom center",
-            scrub: 1,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.5,
           },
-        }
-      );
+        });
+      }
     }, mainRef);
 
     return () => ctx.revert();
   }, []);
 
+  const pathData = generateElasticPath(); // Style 3: Elastic
+
   return (
     <section ref={mainRef}>
       <div className="w-full mx-auto" style={{ height: "300vh" }}>
         <div className="sticky top-0 h-screen w-full flex flex-col items-start justify-center overflow-hidden">
-          {/* Horizontal Line */}
-          <div className="absolute bottom-20 left-0 right-0 h-0.5 bg-gray-300">
-            <div ref={lineRef} className="h-full bg-black origin-left rounded-full" style={{ width: 0 }} />
+          {/* Animated SVG Line */}
+          <div className="absolute bottom-20 left-0 right-0 w-full overflow-visible pointer-events-none" style={{ height: "100px" }}>
+            <svg
+              className="w-full h-full"
+              viewBox="0 0 3000 100"
+              preserveAspectRatio="none"
+              style={{
+                overflow: "visible",
+                transform: "translateY(-50%)",
+              }}>
+              <defs>
+                {/* Gradient untuk line */}
+                <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#f5f5f5" stopOpacity="0.3" />
+                  <stop offset="50%" stopColor="#f5f5f5" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#f5f5f5" stopOpacity="0.3" />
+                </linearGradient>
+
+                {/* Glow effect */}
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Background shadow line */}
+              <path d={pathData} stroke="rgba(0, 0, 0, 6)" strokeWidth="6" fill="none" strokeLinecap="round" strokeLinejoin="round" transform="translate(0, 52)" />
+
+              {/* Main animated line */}
+              <path ref={svgPathRef} d={pathData} stroke="url(#lineGradient)" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" filter="url(#glow)" transform="translate(0, 50)" />
+            </svg>
           </div>
 
-          <motion.div ref={carouselRef} className="flex gap-10" style={{ x }}>
+          <motion.div
+            ref={carouselRef}
+            className="flex gap-10"
+            style={{
+              x,
+              filter: filterValue,
+            }}>
             {galleryImages.map((item, index) => (
               <motion.div {...slideAnimation} key={item.id} className="group relative h-[300px] w-[300px] overflow-hidden rounded-sm bg-black shrink-0">
-                <OptimizedImage
-                  src={item.url}
-                  alt={item.title || `Gallery image ${item.id}`}
-                  className="w-full h-full"
-                  priority={index < 3} // Prioritize loading first 3 images
-                />
+                <OptimizedImage src={item.url} alt={item.title || `Gallery image ${item.id}`} className="w-full h-full" priority={index < 3} />
               </motion.div>
             ))}
           </motion.div>

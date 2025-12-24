@@ -7,6 +7,8 @@ import HorizontalScroll from "@/components/HorizontalScroll";
 import AnimatedNumber from "@/components/AnimatedNumber";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import ScrollFloat from "@/components/ScrollFloat";
+import { motion } from "framer-motion";
 
 export default function Home() {
   return (
@@ -41,11 +43,31 @@ export default function Home() {
         {/* Container 1 - Hero */}
         <div className="relative z-10 pt-16 min-h-screen">
           <div className="absolute left-0 bottom-0 z-20 flex flex-col justify-end h-full w-full pl-8 pb-16 pointer-events-none select-none">
-            <span className="text-[18vw] md:text-[9vw] xl:text-[8vw] leading-[0.9] tracking-tight font-black uppercase text-white drop-shadow-xl flex">
-              Local <span className="text-[4vw] md:text-[2.2vw] lg:text-[24px] leading-snug font-black uppercase text-white pl-[1vw] mb-1 ">Visual</span>
-            </span>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className="text-[18vw] md:text-[9vw] xl:text-[8vw] leading-[0.9] tracking-tight font-black uppercase text-white drop-shadow-xl flex">
+              Local{" "}
+              <motion.span
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 1.0, delay: 0.3, ease: "backOut" }}
+                className="text-[4vw] md:text-[2.2vw] lg:text-[24px] leading-snug font-black uppercase text-white pl-[1vw] mb-1">
+                Visual
+              </motion.span>
+            </motion.div>
 
-            <span className="block text-[8vw] md:text-[9vw] xl:text-[8vw] leading-[0.9] tracking-tight font-black uppercase text-white drop-shadow-xl">Gigs</span>
+            <motion.span
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 1.0, delay: 0.6, ease: "easeOut" }}
+              className="block text-[8vw] md:text-[9vw] xl:text-[8vw] leading-[0.9] tracking-tight font-black uppercase text-white drop-shadow-xl">
+              Gigs
+            </motion.span>
           </div>
           <div className="absolute right-0 bottom-0 z-20 pr-8 pb-16 pointer-events-none select-none">
             <span className="text-sm md:text-xl  font-mono text-white drop-shadow-lg">[.jpg/.mp4]</span>
@@ -70,8 +92,13 @@ export default function Home() {
 
           {/* Middle thematic text */}
           <div className="mb-4 md:mb-8 text-center flex flex-col items-center justify-center px-4 pt-8 md:pt-12">
-            <h2 className="text-xl md:text-4xl lg:text-6xl font-serif text-black mb-2 leading-tight">Make Your Band a Portfolio</h2>
-            <p className="text-sm font-mono text-black/80 max-w-2xl px-2">We capture the energy, the crowd, and the soul of your performance.</p>
+            <ScrollFloat scrollStart="top bottom" animationDuration={1.0} ease="back.inOut(1.7)" stagger={0.02} containerClassName="mb-2" textClassName="text-xl md:text-4xl lg:text-6xl font-serif text-black leading-tight">
+              Make Your Band a Portfolio
+            </ScrollFloat>
+
+            <ScrollFloat scrollStart="center bottom" animationDuration={0.8} ease="back.inOut(1.5)" stagger={0.01} containerClassName="max-w-2xl px-2" textClassName="text-sm font-mono text-black/80">
+              We capture the energy, the crowd, and the soul of your performance.
+            </ScrollFloat>
           </div>
 
           {/* Stats */}

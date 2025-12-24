@@ -127,8 +127,8 @@ const Navbar = () => {
         animate={{
           backgroundColor: isScrolled ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0.6)",
           backdropFilter: "blur(12px)",
-          marginLeft: isScrolled ? "30%" : "0.5rem",
-          marginRight: isScrolled ? "30%" : "0.5rem",
+          marginLeft: isScrolled ? "15%" : "0.5rem",
+          marginRight: isScrolled ? "15%" : "0.5rem",
         }}
         transition={{
           duration: 0.4,
@@ -139,18 +139,13 @@ const Navbar = () => {
           marginLeft: isScrolled ? "30%" : "0.5rem",
           marginRight: isScrolled ? "30%" : "0.5rem",
         }}>
-        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4 h-14 sm:h-16">
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-1 h-14 sm:h-16">
           {/* Logo */}
-          <motion.div
-            animate={{
-              scale: isScrolled ? 0.9 : 1,
-            }}
-            transition={{ duration: 0.3 }}
-            className="shrink-0">
+          <div className="">
             <Link href="/" className="flex items-center cursor-target">
               <img src="/logo.png" alt="Loggs Visual Logo" className="h-8 sm:h-10 w-auto" style={{ filter: "brightness(0) invert(1)" }} />
             </Link>
-          </motion.div>
+          </div>
 
           {/* Center Clock */}
           <div className="flex justify-center">
@@ -173,7 +168,7 @@ const Navbar = () => {
                 gap: isScrolled ? "4px" : "16px",
               }}
               transition={{ duration: 0.3 }}
-              className="flex items-center space-x-4">
+              className="flex items-center space-x-2 font-mono">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link href="/" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium transition-colors duration-200 cursor-target">
                   Home
@@ -207,19 +202,19 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.2 }} className="lg:hidden pb-4">
-            <div className="px-4 pt-4 space-y-3">
+            <div className="px-4 pt-2 space-y-1 font-mono">
               <motion.div whileTap={{ scale: 0.98 }}>
-                <Link href="/" className="text-white hover:text-gray-300 block py-2 text-base font-medium transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/" className="text-white hover:text-gray-300 block py-1 text-base font-medium transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   Home
                 </Link>
               </motion.div>
               <motion.div whileTap={{ scale: 0.98 }}>
-                <Link href="/about" className="text-white hover:text-gray-300 block py-2 text-base font-medium transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/about" className="text-white hover:text-gray-300 block py-1 text-base font-medium transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   About Us
                 </Link>
               </motion.div>
               <motion.div whileTap={{ scale: 0.98 }}>
-                <Link href="/works" className="text-white hover:text-gray-300 block py-2 text-base font-medium transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/works" className="text-white hover:text-gray-300 block py-1 text-base font-medium transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   Works
                 </Link>
               </motion.div>

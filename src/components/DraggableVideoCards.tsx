@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useDragControls } from "framer-motion";
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 
 interface VideoCard {
   id: string;
@@ -14,22 +14,30 @@ interface VideoCard {
 interface DraggableVideoCardProps {
   video: VideoCard;
   index: number;
+  isMobile: boolean;
 }
 
-function DraggableVideoCard({ video, index }: DraggableVideoCardProps) {
+function DraggableVideoCard({ video, index, isMobile }: DraggableVideoCardProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [zIndex, setZIndex] = useState(10 + index);
   const dragControls = useDragControls();
-  const constraintsRef = useRef<HTMLDivElement>(null);
 
-  // Default positions scattered across the hero
-  const defaultPositions = [
+  // Desktop positions - scattered
+  const desktopPositions = [
     { x: "65%", y: "40%", rotate: 0 },
     { x: "55%", y: "15%", rotate: 0 },
     { x: "35%", y: "45%", rotate: 0 },
   ];
 
-  const pos = defaultPositions[index % defaultPositions.length];
+  // Mobile positions - stacked center
+  const mobilePositions = [
+    { x: "50%", y: "25%", rotate: 0 },
+    { x: "50%", y: "30%", rotate: 2 },
+    { x: "50%", y: "35%", rotate: -1 },
+  ];
+
+  const positions = isMobile ? mobilePositions : desktopPositions;
+  const pos = positions[index % positions.length];
 
   const startDrag = (event: React.PointerEvent) => {
     dragControls.start(event);
@@ -52,11 +60,13 @@ function DraggableVideoCard({ video, index }: DraggableVideoCardProps) {
         opacity: 0,
         scale: 0.8,
         rotate: video.initialRotation ?? pos.rotate,
+        x: isMobile ? "-50%" : 0,
       }}
       animate={{
         opacity: 1,
         scale: isDragging ? 1.05 : 1,
         rotate: isDragging ? 0 : video.initialRotation ?? pos.rotate,
+        x: isMobile ? "-50%" : 0,
       }}
       whileHover={{ scale: 1.02 }}
       transition={{
@@ -75,7 +85,7 @@ function DraggableVideoCard({ video, index }: DraggableVideoCardProps) {
       className={isDragging ? "cursor-grabbing" : ""}>
       <div
         className={`
-          relative w-[200px] sm:w-[240px] md:w-[400px] aspect-video
+          relative w-[260px] sm:w-[300px] md:w-[400px] aspect-video
           bg-black rounded-lg overflow-hidden
           border border-white/30
           shadow-2xl shadow-black/60
@@ -121,10 +131,22 @@ interface DraggableVideoCardsProps {
 }
 
 export default function DraggableVideoCards({ videos }: DraggableVideoCardsProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <>
       {videos.map((video, index) => (
-        <DraggableVideoCard key={video.id} video={video} index={index} />
+        <DraggableVideoCard key={video.id} video={video} index={index} isMobile={isMobile} />
       ))}
     </>
   );

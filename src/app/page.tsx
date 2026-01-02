@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import FaultyTerminal from "@/components/FaultyTerminal";
 import TargetCursor from "@/components/TargetCursor";
@@ -12,6 +13,60 @@ import ScrollFloat from "@/components/ScrollFloat";
 import { motion } from "framer-motion";
 
 export default function Home() {
+  const [terminalSettings, setTerminalSettings] = useState({
+    scale: 2,
+    gridMul: [2, 1] as [number, number],
+    dpr: 1,
+    noiseAmp: 1,
+    mouseReact: true,
+    timeScale: 1,
+    scanlineIntensity: 0.7,
+  });
+
+  useEffect(() => {
+    const updateSettings = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        // Mobile - same visual, lower resolution for performance
+        setTerminalSettings({
+          scale: 2,
+          gridMul: [2, 1],
+          dpr: 0.5,
+          noiseAmp: 1,
+          mouseReact: false,
+          timeScale: 1,
+          scanlineIntensity: 0.7,
+        });
+      } else if (width < 1024) {
+        // Tablet
+        setTerminalSettings({
+          scale: 2,
+          gridMul: [2, 1],
+          dpr: 0.75,
+          noiseAmp: 1,
+          mouseReact: true,
+          timeScale: 1,
+          scanlineIntensity: 0.7,
+        });
+      } else {
+        // Desktop - full quality
+        setTerminalSettings({
+          scale: 2,
+          gridMul: [2, 1],
+          dpr: 1,
+          noiseAmp: 1,
+          mouseReact: true,
+          timeScale: 1,
+          scanlineIntensity: 0.7,
+        });
+      }
+    };
+
+    updateSettings();
+    window.addEventListener("resize", updateSettings);
+    return () => window.removeEventListener("resize", updateSettings);
+  }, []);
+
   return (
     <>
       <SmoothScroll>
@@ -20,24 +75,24 @@ export default function Home() {
         <div className="fixed inset-0 z-0" style={{ pointerEvents: "none" }}>
           <div style={{ pointerEvents: "auto", width: "100%", height: "100%" }}>
             <FaultyTerminal
-              scale={2}
-              gridMul={[2, 1]}
+              scale={terminalSettings.scale}
+              gridMul={terminalSettings.gridMul}
               digitSize={1.2}
-              timeScale={1}
+              timeScale={terminalSettings.timeScale}
               pause={false}
-              scanlineIntensity={1}
+              scanlineIntensity={terminalSettings.scanlineIntensity}
               glitchAmount={1}
               flickerAmount={1}
-              noiseAmp={1}
+              noiseAmp={terminalSettings.noiseAmp}
               chromaticAberration={0}
               dither={0}
               curvature={0.1}
               tint="#f5f5f5"
-              mouseReact={true}
+              mouseReact={terminalSettings.mouseReact}
               mouseStrength={1.0}
               pageLoadAnimation={false}
               brightness={1}
-              dpr={1}
+              dpr={terminalSettings.dpr}
             />
           </div>
         </div>

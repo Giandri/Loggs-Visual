@@ -36,6 +36,7 @@ export default function Home() {
               mouseStrength={1.0}
               pageLoadAnimation={false}
               brightness={1}
+              dpr={1}
             />
           </div>
         </div>
@@ -92,7 +93,7 @@ export default function Home() {
 
           {/* Middle thematic text */}
           <div className="mb-4 md:mb-8 text-center flex flex-col items-center justify-center px-4 pt-8 md:pt-12">
-            <ScrollFloat scrollStart="top bottom" animationDuration={1.0} ease="back.inOut(1.7)" stagger={0.02} containerClassName="mb-2" textClassName="text-xl md:text-4xl lg:text-6xl font-serif text-black leading-tight">
+            <ScrollFloat scrollStart="top bottom" animationDuration={1.0} ease="back.inOut(1.7)" stagger={0.02} containerClassName="mb-[-1px]" textClassName="text-xl md:text-4xl lg:text-6xl font-serif text-black leading-tight">
               Make Your Band a Portfolio
             </ScrollFloat>
 

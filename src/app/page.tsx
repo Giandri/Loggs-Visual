@@ -100,7 +100,7 @@ export default function Home() {
         {/* Container 1 - Hero */}
         <div className="relative z-10 pt-16 min-h-screen overflow-hidden">
           {/* Draggable Video Cards */}
-          <DraggableVideoCards videos={[{ id: "1", youtubeId: "Q_MZ79uFtD4", title: "New Project" }]} />
+          <DraggableVideoCards cards={[{ id: "1", type: "youtube", youtubeId: "Q_MZ79uFtD4", title: "New Project" }]} />
 
           <div className="absolute left-0 bottom-0 z-20 flex flex-col justify-end h-full w-full pl-8 pb-16 pointer-events-none select-none">
             <motion.div

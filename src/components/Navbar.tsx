@@ -186,6 +186,12 @@ const Navbar = () => {
                   Works
                 </Link>
               </motion.div>
+
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <a href="https://maps.loggsvisual.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 px-3 py-2 text-sm font-medium transition-colors duration-200 cursor-target">
+                  Maps
+                </a>
+              </motion.div>
             </motion.div>
           </div>
 
@@ -217,6 +223,11 @@ const Navbar = () => {
                 <Link href="/works" className="text-white hover:text-gray-300 block py-1 text-base font-medium transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   Works
                 </Link>
+              </motion.div>
+              <motion.div whileTap={{ scale: 0.98 }}>
+                <a href="https://maps.loggsvisual.com" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 block py-1 text-base font-medium transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                  Maps
+                </a>
               </motion.div>
             </div>
           </motion.div>

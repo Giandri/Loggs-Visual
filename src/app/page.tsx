@@ -5,6 +5,7 @@ import FaultyTerminal from "@/components/FaultyTerminal";
 import TargetCursor from "@/components/TargetCursor";
 import HorizontalScroll from "@/components/HorizontalScroll";
 import AnimatedNumber from "@/components/AnimatedNumber";
+import DraggableVideoCards from "@/components/DraggableVideoCards";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import ScrollFloat from "@/components/ScrollFloat";
@@ -42,7 +43,10 @@ export default function Home() {
         </div>
 
         {/* Container 1 - Hero */}
-        <div className="relative z-10 pt-16 min-h-screen">
+        <div className="relative z-10 pt-16 min-h-screen overflow-hidden">
+          {/* Draggable Video Cards */}
+          <DraggableVideoCards videos={[{ id: "1", youtubeId: "Q_MZ79uFtD4", title: "New Project" }]} />
+
           <div className="absolute left-0 bottom-0 z-20 flex flex-col justify-end h-full w-full pl-8 pb-16 pointer-events-none select-none">
             <motion.div
               initial={{ opacity: 0, y: 50 }}

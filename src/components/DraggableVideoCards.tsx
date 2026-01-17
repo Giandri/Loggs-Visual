@@ -9,7 +9,7 @@ interface EmbedCard {
   youtubeId?: string;
   url?: string;
   title: string;
-  initialPosition?: { x: number; y: number };
+  initialPosition?: { x: string; y: string };
   initialRotation?: number;
 }
 
@@ -17,21 +17,48 @@ interface DraggableCardProps {
   card: EmbedCard;
   index: number;
   isMobile: boolean;
+  totalCards: number;
 }
 
-function DraggableCard({ card, index, isMobile }: DraggableCardProps) {
+function DraggableCard({ card, index, isMobile, totalCards }: DraggableCardProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [zIndex, setZIndex] = useState(10 + index);
+  const [shouldLoad, setShouldLoad] = useState(false);
   const dragControls = useDragControls();
 
-  // Desktop positions - scattered
-  const desktopPositions = [{ x: "55%", y: "30%", rotate: 0 }];
+  // Auto-load iframe after component mounts with delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShouldLoad(true);
+    }, 500 + index * 200); // Stagger loading to prevent overwhelming
 
-  // Mobile positions - stacked center
-  const mobilePositions = [{ x: "50%", y: "22%", rotate: 0 }];
+    return () => clearTimeout(timer);
+  }, [index]);
 
-  const positions = isMobile ? mobilePositions : desktopPositions;
-  const pos = positions[index % positions.length];
+  // Desktop positions - use card's initialPosition or fallback
+  const getDesktopPosition = () => ({
+    x: card.initialPosition?.x ?? "40%",
+    y: card.initialPosition?.y ?? "30%",
+    rotate: card.initialRotation ?? 0,
+  });
+
+  // Mobile positions - vertical column layout
+  const getMobilePosition = () => {
+    // Simple vertical layout: stack cards in one column
+    const positions = [
+      { x: "50%", y: "15%" }, // Card 1: top
+      { x: "50%", y: "35%" }, // Card 2: middle
+      { x: "50%", y: "55%" }, // Card 3: bottom
+      { x: "50%", y: "80%" }, // Card 4: if needed
+    ];
+
+    return {
+      ...(positions[index] || positions[0]),
+      rotate: 0,
+    };
+  };
+
+  const pos = isMobile ? getMobilePosition() : getDesktopPosition();
 
   const startDrag = (event: React.PointerEvent) => {
     dragControls.start(event);
@@ -43,7 +70,7 @@ function DraggableCard({ card, index, isMobile }: DraggableCardProps) {
   const getIframeSrc = () => {
     switch (card.type) {
       case "youtube":
-        return `https://www.youtube.com/embed/${card.youtubeId}?rel=0&modestbranding=1&autoplay=1&mute=1&loop=1&playlist=${card.youtubeId}`;
+        return `https://www.youtube.com/embed/${card.youtubeId}?rel=0&modestbranding=1&autoplay=1&mute=1&loop=1&playlist=${card.youtubeId}&controls=0&showinfo=0&iv_load_policy=3`;
       case "maps":
       case "iframe":
         return card.url || "";
@@ -85,14 +112,16 @@ function DraggableCard({ card, index, isMobile }: DraggableCardProps) {
       }}
       style={{
         position: "absolute",
-        left: card.initialPosition?.x ?? pos.x,
-        top: card.initialPosition?.y ?? pos.y,
+        left: pos.x,
+        top: pos.y,
         zIndex,
       }}
       className={isDragging ? "cursor-grabbing" : ""}>
       <div
         className={`
-          relative w-[400px] sm:w-[300px] md:w-[400px] aspect-video
+          relative
+          w-[240px] xs:w-[260px] sm:w-[360px] md:w-[380px] lg:w-[400px] xl:w-[420px]
+          aspect-video
           bg-black rounded-lg overflow-hidden
           border border-white/30
           shadow-2xl shadow-black/60
@@ -100,14 +129,14 @@ function DraggableCard({ card, index, isMobile }: DraggableCardProps) {
           transition-shadow duration-200
         `}>
         {/* Iframe */}
-        <iframe src={getIframeSrc()} title={card.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full pointer-events-auto" />
+        {shouldLoad && <iframe src={getIframeSrc()} title={card.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full pointer-events-auto" />}
 
         {/* Title overlay - DRAG HANDLE */}
-        <div onPointerDown={startDrag} className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-3 md:p-4 cursor-grab active:cursor-grabbing touch-none select-none">
+        <div onPointerDown={startDrag} className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent p-2 xs:p-3 sm:p-4 md:p-5 cursor-grab active:cursor-grabbing touch-none select-none">
           <div className="flex items-center justify-between">
-            <p className="text-white text-[10px] md:text-xs font-mono truncate flex-1">{card.title}</p>
+            <p className="text-white text-[9px] xs:text-[10px] sm:text-xs md:text-sm font-mono truncate flex-1">{card.title}</p>
             {/* Drag icon */}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" className="opacity-60 ml-2 flex-shrink-0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" className="opacity-60 ml-1 xs:ml-2 w-4 h-4 xs:w-5 xs:h-5 flex-shrink-0">
               <circle cx="9" cy="5" r="1.5" fill="white" />
               <circle cx="15" cy="5" r="1.5" fill="white" />
               <circle cx="9" cy="12" r="1.5" fill="white" />
@@ -132,6 +161,7 @@ interface DraggableCardsProps {
 }
 
 export default function DraggableVideoCards({ cards }: DraggableCardsProps) {
+  const totalCards = cards.length;
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -147,7 +177,7 @@ export default function DraggableVideoCards({ cards }: DraggableCardsProps) {
   return (
     <>
       {cards.map((card, index) => (
-        <DraggableCard key={card.id} card={card} index={index} isMobile={isMobile} />
+        <DraggableCard key={card.id} card={card} index={index} isMobile={isMobile} totalCards={totalCards} />
       ))}
     </>
   );

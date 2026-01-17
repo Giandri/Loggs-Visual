@@ -11,6 +11,7 @@ import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import ScrollFloat from "@/components/ScrollFloat";
 import { motion } from "framer-motion";
+import { youtubeCards } from "@/config/youtube-cards";
 
 export default function Home() {
   const [terminalSettings, setTerminalSettings] = useState({
@@ -100,7 +101,7 @@ export default function Home() {
         {/* Container 1 - Hero */}
         <div className="relative z-10 pt-16 min-h-screen overflow-hidden">
           {/* Draggable Video Cards */}
-          <DraggableVideoCards cards={[{ id: "1", type: "youtube", youtubeId: "Q_MZ79uFtD4", title: "New Project" }]} />
+          <DraggableVideoCards cards={youtubeCards} />
 
           <div className="absolute left-0 bottom-0 z-20 flex flex-col justify-end h-full w-full pl-8 pb-16 pointer-events-none select-none">
             <motion.div

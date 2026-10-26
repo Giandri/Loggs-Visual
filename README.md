@@ -43,16 +43,6 @@ For the full experience, open the [live demo](https://loggsvisual.com).
   <img src="docs/screenshots/works-desktop.jpg" alt="3D works archive with layered project cards" width="85%">
 </p>
 
-## Tech Stack
-
-<p align="center">
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,framer,vercel,nodejs&perline=7" alt="Next.js, React, TypeScript, Tailwind CSS, Framer Motion, Vercel, Node.js">
-  </a>
-</p>
-
-Animation uses Motion (Framer Motion), GSAP, and Lenis. The terminal background is rendered with OGL. Gallery images are compressed with Sharp.
-
 ## Resources
 
 - [Live Demo](https://loggsvisual.com)
@@ -60,37 +50,6 @@ Animation uses Motion (Framer Motion), GSAP, and Lenis. The terminal background 
 - [Issue Tracker](https://github.com/Giandri/Loggs-Visual/issues)
 - [Loggs Maps](https://maps.loggsvisual.com) - the coffee shop map for Pangkal Pinang
 
-## Getting Started
-
-Requires Node.js 20.9 or newer.
-
-```bash
-git clone https://github.com/Giandri/Loggs-Visual.git
-cd Loggs-Visual
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-To verify a production build:
-
-```bash
-npm run build
-npm run start
-```
-
-## Project Structure
-
-```text
-src/app/            App Router pages: /, /about, /works
-src/components/     WebGL, motion, gallery, and UI components
-src/config/         Gallery, works, and YouTube card data
-src/lib/            Metadata and shared utilities
-public/gallery/     Source photos and optimized WebP output
-scripts/            Sharp image optimization script
-docs/screenshots/   README screenshots
-```
 
 ## Content Workflow
 

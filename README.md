@@ -1,8 +1,11 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Giandri/Loggs-Visual/main/public/logo.png" width="90" alt="Loggs Visual logo">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Giandri/Loggs-Visual/main/public/logo-white.png">
+    <img src="https://raw.githubusercontent.com/Giandri/Loggs-Visual/main/public/logo.png" width="120" alt="Loggs Visual logo">
+  </picture>
 </p>
 
-<h1 align="center">Loggs Visual - Live Music Documentation from Pangkal Pinang</h1>
+<h1 align="center">Loggs Visual</h1>
 
 Loggs Visual documents the local music scene in Pangkal Pinang. This repository is the project's portfolio site: a motion-heavy home for live-show photography, band sessions, and video coverage. It runs on Next.js with no CMS or database. Gallery, works, and video content live in TypeScript config files.
 

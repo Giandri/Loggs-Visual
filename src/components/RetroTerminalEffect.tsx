@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useMemo, useCallback } from "react";
 
 type Vec2 = [number, number];
 
-export interface FaultyTerminalProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface RetroTerminalEffectProps extends React.HTMLAttributes<HTMLDivElement> {
   scale?: number;
   gridMul?: Vec2;
   digitSize?: number;
@@ -243,7 +243,7 @@ function hexToRgb(hex: string): [number, number, number] {
   return [((num >> 16) & 255) / 255, ((num >> 8) & 255) / 255, (num & 255) / 255];
 }
 
-export default function FaultyTerminal({
+export default function RetroTerminalEffect({
   scale = 1,
   gridMul = [2, 1],
   digitSize = 1.5,
@@ -265,7 +265,7 @@ export default function FaultyTerminal({
   className,
   style,
   ...rest
-}: FaultyTerminalProps) {
+}: RetroTerminalEffectProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const programRef = useRef<Program>(null);
   const rendererRef = useRef<Renderer>(null);
@@ -293,7 +293,17 @@ export default function FaultyTerminal({
     const ctn = containerRef.current;
     if (!ctn) return;
 
-    const renderer = new Renderer({ dpr });
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined') return;
+
+    let renderer: Renderer;
+    try {
+      renderer = new Renderer({ dpr });
+    } catch (error) {
+      console.warn('Failed to create WebGL renderer:', error);
+      return;
+    }
+
     rendererRef.current = renderer;
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 1);

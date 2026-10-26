@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
-import FaultyTerminal from "@/components/FaultyTerminal";
+import RetroTerminalEffect from "@/components/RetroTerminalEffect";
 import TargetCursor from "@/components/TargetCursor";
 import HorizontalScroll from "@/components/HorizontalScroll";
 import AnimatedNumber from "@/components/AnimatedNumber";
@@ -28,7 +28,6 @@ export default function Home() {
     const updateSettings = () => {
       const width = window.innerWidth;
       if (width < 640) {
-        // Mobile - same visual, lower resolution for performance
         setTerminalSettings({
           scale: 2,
           gridMul: [2, 1],
@@ -39,7 +38,6 @@ export default function Home() {
           scanlineIntensity: 0.7,
         });
       } else if (width < 1024) {
-        // Tablet
         setTerminalSettings({
           scale: 2,
           gridMul: [2, 1],
@@ -50,7 +48,6 @@ export default function Home() {
           scanlineIntensity: 0.7,
         });
       } else {
-        // Desktop - full quality
         setTerminalSettings({
           scale: 2,
           gridMul: [2, 1],
@@ -75,7 +72,7 @@ export default function Home() {
         <Navbar />
         <div className="fixed inset-0 z-0" style={{ pointerEvents: "none" }}>
           <div style={{ pointerEvents: "auto", width: "100%", height: "100%" }}>
-            <FaultyTerminal
+            <RetroTerminalEffect
               scale={terminalSettings.scale}
               gridMul={terminalSettings.gridMul}
               digitSize={1.2}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import FaultyTerminal from "@/components/FaultyTerminal";
+import RetroTerminalEffect from "@/components/RetroTerminalEffect";
 import TargetCursor from "@/components/TargetCursor";
 import HorizontalScroll from "@/components/HorizontalScroll";
 import AnimatedNumber from "@/components/AnimatedNumber";

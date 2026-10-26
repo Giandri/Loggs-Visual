@@ -1,6 +1,5 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Giandri/Loggs-Visual/main/public/logo-white.png">
     <img src="https://raw.githubusercontent.com/Giandri/Loggs-Visual/main/public/logo.png" width="120" alt="Loggs Visual logo">
   </picture>
 </p>
